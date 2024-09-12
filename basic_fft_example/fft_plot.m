@@ -1,27 +1,27 @@
 
 
 % Örnekleme frekansı ve zaman vektörü
-Fs = 1000000;  % Örnekleme frekansı (örneğin 100 kHz)
+Fs = 1000000;  % Örnekleme frekansı (örneğin 1 MHz)
 t = (0:1023) / Fs;  % Zaman vektörü (1024 nokta)
 
 % Beyaz gürültü oluşturma
 amplitude_w =2; %sinyal amplitude artırmak veya azaltmak için kullanılır
 white_noise = amplitude_w*randn(size(t));
 
-% Laser Doppler sinyali oluşturma
-f_carrier = 100000;  % Taşıyıcı frekans (örneğin 10 kHz)
+% Taşıyıcı frekanslı sinyali oluşturma
+f_carrier = 100000;  % Taşıyıcı frekans (örneğin 100 kHz)
 modulation_index = 0.5;  % Modülasyon indeksi
-%laser_doppler = cos(2 * pi * f_carrier * t + modulation_index * sin(2 * pi * 100 * t));
+%t_signal = cos(2 * pi * f_carrier * t + modulation_index * sin(2 * pi * 100 * t));
 %t1_start =0.0005;
 %num_cycles = 1;
-%laser_doppler = 3*cos(2 * pi * f_carrier * (t - t1_start) * num_cycles) .* (t >= t1_start & t < (t1_start + 1/f_carrier));
+%t_signal = 3*cos(2 * pi * f_carrier * (t - t1_start) * num_cycles) .* (t >= t1_start & t < (t1_start + 1/f_carrier));
 Ta = 0.0002;  % Sinyalin başlama zamanı (örneğin 0.002 saniye)
-Tb = Ta + (1/f_carrier)*50;  % Sinyalin durma zamanı buradaki 5(cycle) sinyal uzunluğunu ayarlamak için değiştirlebilir
+Tb = Ta + (1/f_carrier)*50;  % Sinyalin durma zamanı buradaki 50(cycle) sinyal uzunluğunu ayarlamak için değiştirlebilir
 amplitude_l =2; %sinyal amplitude artırmak veya azaltmak için kullanılır
-laser_doppler = amplitude_l * cos(2 * pi * f_carrier * (t - Ta) ) .* (t >= Ta & t < Tb);
+t_signal = amplitude_l * cos(2 * pi * f_carrier * (t - Ta) ) .* (t >= Ta & t < Tb);
 
-% Toplam sinyal (beyaz gürültü + laser doppler)
-signal = white_noise + laser_doppler;
+% Toplam sinyal (beyaz gürültü + taşıyıcı sinyal)
+signal = white_noise + t_signal;
 
 % FFT hesaplama
 N = 1024;  % FFT uzunluğu (1024 nokta)
@@ -49,18 +49,18 @@ xlabel('Time (s)');
 ylabel('Amplitude');
 grid on;
 
-% doppler Sinyali zaman domaininde plot et
+% taşıyıcı Sinyali zaman domaininde plot et
 subplot(4, 1, 2);
-plot(t, laser_doppler);
-title('10 kHz Laser Doppler Signal');
+plot(t, t_signal);
+title('100 kHz taşıyıcı Signal');
 xlabel('Time (s)');
 ylabel('Amplitude');
 grid on;
 
-% Doppler+ white Noise Sinyali zaman domaininde plot et
+% taşıyıcı sinyal + white Noise Sinyali zaman domaininde plot et
 subplot(4, 1, 3);
 plot(t, signal);
-title('White Noise + 10 kHz Laser Doppler Signal');
+title('White Noise + 100 kHz taşıyıcı sinyal');
 xlabel('Time (s)');
 ylabel('Amplitude');
 grid on;
@@ -68,7 +68,7 @@ grid on;
 % FFT sonucunu frekans domaininde plot et
 subplot(4, 1, 4);
 plot(f_single_side, Y_single_side);
-title('FFT of White Noise + 10 kHz Laser Doppler Signal');
+title('FFT of White Noise + 100 kHz t_signal Signal');
 xlabel('Frequency (Hz)');
 ylabel('Normalized Amplitude');
 grid on;
